@@ -1,30 +1,74 @@
 package com.skylar.igcommunity
 
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.view.MenuItem
+import androidx.core.view.GravityCompat
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.skylar.igcommunity.webViewActivity.Companion.mainSteamID
+import com.google.android.material.navigation.NavigationView
 import com.skylar.igcommunity.webViewActivity.Companion.userId
-import org.json.JSONArray
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.nav_header_main.*
 import org.json.JSONObject
+import java.util.concurrent.Executors
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    val apiKey = "11887DE1A07B61A5E2E3B710D3AA87FE"
-    val steamId = userId
-    val url = "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=$apiKey&steamids=$steamId"
+    private val apiKey = "11887DE1A07B61A5E2E3B710D3AA87FE"
+    private val steamId = userId
+    private val url = "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=$apiKey&steamids=$steamId"
+
+    companion object {
+        var personaname : String = ""
+        var avatarImage : String = ""
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         downloadTask()
+        setupActionBar()
+        nav_view.setNavigationItemSelectedListener(this)
 
+        Handler().postDelayed({
+            setUserName()
+            val executor = Executors.newSingleThreadExecutor()
+
+
+            val handler = Handler(Looper.getMainLooper())
+
+            var image: Bitmap? = null
+
+            executor.execute {
+
+                val imageURL = avatarImage
+
+                try {
+                    val `in` = java.net.URL(imageURL).openStream()
+                    image = BitmapFactory.decodeStream(`in`)
+
+                    handler.post {
+                        nav_user_image.setImageBitmap(image)
+                    }
+                }
+                catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }, 2500)
     }
 
     private fun downloadTask() {
@@ -36,11 +80,11 @@ class MainActivity : AppCompatActivity() {
                 var jResponseObject = JSONObject(responseString)
                 var jPlayerObject = jResponseObject.getJSONObject("response")
                 var jPlayerArray = jPlayerObject.getJSONArray("players")
-                Log.e("jObject",jPlayerArray.toString())
+
                 for ( i in 0..jPlayerArray.length()-1) {
                     var jChildObject = jPlayerArray.getJSONObject(i)
-                    var personaname = jChildObject.getString("personaname")
-                    var avatarImage = jChildObject.getString("avatarfull")
+                    personaname = jChildObject.getString("personaname")
+                    avatarImage = jChildObject.getString("avatarfull")
                     Log.e("Profile Name",personaname)
                     Log.e("Avatar Image",avatarImage)
 
@@ -51,5 +95,40 @@ class MainActivity : AppCompatActivity() {
 
             })
         queue.add(request)
+    }
+
+    private fun setupActionBar() {
+        setSupportActionBar(toolbar_main_activity)
+        toolbar_main_activity.setNavigationIcon(R.drawable.ic_action_navigation_menu)
+
+        toolbar_main_activity.setNavigationOnClickListener {
+            toggleDrawer()
+        }
+    }
+
+    private fun toggleDrawer(){
+        if(drawer_layout.isDrawerOpen(GravityCompat.START)){
+            drawer_layout.closeDrawer(GravityCompat.START)
+        }else{
+            drawer_layout.openDrawer(GravityCompat.START)
+        }
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.nav_sign_out ->{
+                val intent = Intent(this,IntroActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                startActivity(intent)
+                finish()
+            }
+
+        }
+        drawer_layout.closeDrawer(GravityCompat.START)
+        return true
+    }
+
+    private fun setUserName(){
+        tv_username.text = personaname
     }
 }

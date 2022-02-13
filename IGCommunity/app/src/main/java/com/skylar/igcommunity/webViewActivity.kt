@@ -16,6 +16,11 @@ class webViewActivity : AppCompatActivity() {
 
     val REALM_PARAM: String = "IGCommunity"
 
+    companion object {
+        var mainSteamID : String = ""
+        var userId : String? = ""
+    }
+
     private val url: String = "https://steamcommunity.com/openid/login?" +
             "openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select&" +
             "openid.identity=http://specs.openid.net/auth/2.0/identifier_select&" +
@@ -42,7 +47,7 @@ class webViewActivity : AppCompatActivity() {
                 val Url: Uri = Uri.parse(url)
                 if (Url.authority.equals(REALM_PARAM.lowercase(Locale.getDefault()))) {
                     val userAccountUrl: Uri = Uri.parse(Url.getQueryParameter("openid.identity"))
-                    val userId: String? = userAccountUrl.lastPathSegment
+                    userId = userAccountUrl.lastPathSegment
                     Log.d("steam userid", "userId $userId")
                     val newUserId : String = userId.toString()
                     val steamID64 : Long = newUserId.toLong()
@@ -54,7 +59,7 @@ class webViewActivity : AppCompatActivity() {
                         authServer = 0
                     }
                     val authId : Long = ((steamID64 - 76561197960265728 - authServer) / 2)
-                    val mainSteamID = "STEAM_1:$authServer:$authId"
+                    mainSteamID = "STEAM_1:$authServer:$authId"
                     Log.d("steamID main", mainSteamID)
 
                     webView.stopLoading()

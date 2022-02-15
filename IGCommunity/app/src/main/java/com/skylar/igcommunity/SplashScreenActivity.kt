@@ -23,25 +23,25 @@ class SplashScreenActivity : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
         )
 
-        if(userId != null)
+        if(userId == "")
         {
             Handler().postDelayed({
-                startActivity(Intent(this,MainActivity::class.java))
+                startActivity(Intent(this,IntroActivity::class.java))
                 finish()
             }, 2500)
         }else{
             Handler().postDelayed({
-                startActivity(Intent(this,IntroActivity::class.java))
+                startActivity(Intent(this,MainActivity::class.java))
                 finish()
             }, 2500)
         }
     }
     private fun loadData() {
         val sharedPreferences = getSharedPreferences("sharedPrefsLogin", Context.MODE_PRIVATE)
-        val savedUserId = sharedPreferences.getString("STEAM_ID_64", null)
-        val savedSteamId = sharedPreferences.getString("STEAM_ID", null)
+        val savedUserId = sharedPreferences.getString("STEAM_ID_64", "")
+        val savedSteamId = sharedPreferences.getString("STEAM_ID", "")
 
-        if (savedUserId != null) {
+        if (savedUserId != "") {
             userId = savedUserId
         }
 

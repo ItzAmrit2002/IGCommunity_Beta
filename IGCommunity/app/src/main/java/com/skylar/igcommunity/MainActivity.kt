@@ -156,8 +156,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val sharedPreferences = getSharedPreferences("sharedPrefsLogin", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.apply(){
-            putString("STEAM_ID_64", null)
-            putString("STEAM_ID", null)
+            putString("STEAM_ID_64", "")
+            putString("STEAM_ID", "")
         }.apply()
     }
 }

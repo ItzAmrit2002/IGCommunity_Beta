@@ -10,6 +10,8 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.MenuItem
+import android.widget.ArrayAdapter
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import com.android.volley.Request
@@ -21,6 +23,7 @@ import com.skylar.igcommunity.webViewActivity.Companion.mainSteamID
 import com.skylar.igcommunity.webViewActivity.Companion.userId
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.home_fragment.*
 import kotlinx.android.synthetic.main.main_content.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 import org.json.JSONObject
@@ -42,6 +45,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
+        //val spinner_array = arrayOf("Indinet Servers", "Brosena Servers")
+        //spinner.adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinner_array)
 
         //function calls
         downloadTask()

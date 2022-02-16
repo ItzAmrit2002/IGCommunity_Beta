@@ -2,20 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/mHome"
-        android:title="Home"
         android:checkable="true"
         android:icon="@drawable/ic_lhome_foreground"
-        />
+        android:title="" />
     <item
         android:id="@+id/mVip"
-        android:title="Free Vip"
         android:checkable="true"
         android:icon="@drawable/ic_vip_foreground"
-        />
+        android:title="" />
     <item
         android:id="@+id/mShop"
-        android:title="Shop"
         android:checkable="true"
         android:icon="@drawable/ic_shop_foreground"
-        />
+        android:title="" />
 </menu>

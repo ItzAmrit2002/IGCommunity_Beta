@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.home_fragment.*
 
@@ -22,12 +23,16 @@ class HomeFragment: Fragment(), AdapterView.OnItemSelectedListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        ArrayAdapter.createFromResource(requireContext(), R.array.spinner_array, android.R.layout.simple_spinner_item)
-            .also { adapter ->
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                spinner.adapter
-                spinner.onItemSelectedListener
-            }
+//        ArrayAdapter.createFromResource(requireContext(), R.array.spinner_array, android.R.layout.simple_spinner_item)
+//            .also { adapter ->
+//                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+//                spinner.adapter
+//                spinner.onItemSelectedListener
+//            }
+//        android.R.layout.simple_spinner_dropdown_item
+        val items = listOf("Option 1", "Option 2", "Option 3", "Option 4")
+        val adapter = ArrayAdapter(requireContext(), R.layout.list_item, items)
+        (spinner.editText as? AutoCompleteTextView)?.setAdapter(adapter)
 
     }
 

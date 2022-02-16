@@ -2,18 +2,16 @@ package com.skylar.igcommunity
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.preference.PreferenceManager
 import android.util.Log
 import android.view.MenuItem
 import androidx.core.view.GravityCompat
+import androidx.fragment.app.Fragment
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
@@ -23,12 +21,15 @@ import com.skylar.igcommunity.webViewActivity.Companion.mainSteamID
 import com.skylar.igcommunity.webViewActivity.Companion.userId
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.main_content.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 import org.json.JSONObject
 import java.util.concurrent.Executors
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+
 
     private val apiKey = "11887DE1A07B61A5E2E3B710D3AA87FE"
     private val url = "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=$apiKey&steamids=$userId"
@@ -76,7 +77,32 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
         }, 3000)
+        val firstFragment = HomeFragment()
+        val secondFragment = CoinFragment()
+        val thirdFragment = ShopFragment()
+
+        setCurrentFragment(firstFragment)
+
+
+        bottomNavigationView.setOnItemSelectedListener{
+            when(it.itemId){
+                R.id.mHome -> setCurrentFragment(firstFragment)
+                R.id.mVip -> setCurrentFragment(secondFragment)
+                R.id.mShop -> setCurrentFragment(thirdFragment)
+            }
+            true
+        }
+
+
+
+
     }
+
+    private fun setCurrentFragment(fragment:Fragment)=
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.flFragment,fragment)
+            commit()
+        }
 
     private fun downloadTask() {
         val queue = Volley.newRequestQueue(this)
